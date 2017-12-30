@@ -18,15 +18,16 @@ package slack
 
 import (
 	"fmt"
-	"log"
 	"os"
+	"net/http"
+	"net/url"
 
 	"github.com/nlopes/slack"
 
 	"github.com/skippbox/kubewatch/config"
 	"github.com/skippbox/kubewatch/pkg/event"
 	kbEvent "github.com/skippbox/kubewatch/pkg/event"
-)
+	)
 
 var slackColors = map[string]string{
 	"Normal":  "good",
@@ -52,12 +53,14 @@ Command line flags will override environment variables
 type Slack struct {
 	Token   string
 	Channel string
+	Url 	string
 }
 
 // Init prepares slack configuration
 func (s *Slack) Init(c *config.Config) error {
 	token := c.Handler.Slack.Token
 	channel := c.Handler.Slack.Channel
+	url := c.Handler.Slack.Url
 
 	if token == "" {
 		token = os.Getenv("KW_SLACK_TOKEN")
@@ -67,8 +70,10 @@ func (s *Slack) Init(c *config.Config) error {
 		channel = os.Getenv("KW_SLACK_CHANNEL")
 	}
 
+
 	s.Token = token
 	s.Channel = channel
+	s.Url = url
 
 	return checkMissingSlackVars(s)
 }
@@ -87,19 +92,9 @@ func (s *Slack) ObjectUpdated(oldObj, newObj interface{}) {
 
 func notifySlack(s *Slack, obj interface{}, action string) {
 	e := kbEvent.New(obj, action)
-	api := slack.New(s.Token)
-	params := slack.PostMessageParameters{}
-	attachment := prepareSlackAttachment(e)
 
-	params.Attachments = []slack.Attachment{attachment}
-	params.AsUser = true
-	channelID, timestamp, err := api.PostMessage(s.Channel, "", params)
-	if err != nil {
-		log.Printf("%s\n", err)
-		return
-	}
-
-	log.Printf("Message successfully sent to channel %s at %s", channelID, timestamp)
+	msg := prepareHTTPMessage(e)
+	http.PostForm(s.Url, url.Values{"event": {msg}})
 }
 
 func checkMissingSlackVars(s *Slack) error {
@@ -108,6 +103,18 @@ func checkMissingSlackVars(s *Slack) error {
 	}
 
 	return nil
+}
+
+
+func prepareHTTPMessage(e event.Event) string {
+	msg := fmt.Sprintf(
+		"A %s in namespace %s has been %s: %s",
+		e.Kind,
+		e.Namespace,
+		e.Reason,
+		e.Name,
+	)
+	return msg
 }
 
 func prepareSlackAttachment(e event.Event) slack.Attachment {

@@ -51,7 +51,7 @@ type Controller struct {
 }
 
 func Start(conf *config.Config, eventHandler handlers.Handler) {
-	kubeClient := utils.GetClientOutOfCluster()
+	kubeClient := utils.GetClient()
 
 	if conf.Resource.Pod {
 		c := newControllerPod(kubeClient, eventHandler)

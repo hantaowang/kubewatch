@@ -55,6 +55,7 @@ type Config struct {
 type Slack struct {
 	Token   string `json:"token"`
 	Channel string `json:"channel"`
+	Url     string `json:"url"`
 }
 
 // Hipchat contains slack configuration
@@ -147,6 +148,9 @@ func (c *Config) CheckMissingResourceEnvvars() {
 	}
 	if (c.Handler.Slack.Token == "") && (os.Getenv("SLACK_TOKEN") != "") {
 		c.Handler.Slack.Token = os.Getenv("SLACK_TOKEN")
+	}
+	if (c.Handler.Slack.Url == "") && (os.Getenv("SLACK_TOKEN") != "") {
+		c.Handler.Slack.Url = os.Getenv("HTTP_URL")
 	}
 }
 
