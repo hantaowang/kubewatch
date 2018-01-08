@@ -33,6 +33,5 @@ var configCmd = &cobra.Command{
 func init() {
 	RootCmd.AddCommand(configCmd)
 	configCmd.AddCommand(slackConfigCmd)
-	configCmd.AddCommand(hipchatConfigCmd)
 	configCmd.AddCommand(resourceConfigCmd)
 }

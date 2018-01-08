@@ -5,7 +5,7 @@ metadata:
   namespace: default
 spec:
   containers:
-  - image: hantaowang/kubewatch
+  - image: hantaowang/kubewatch:v0.0.1
     imagePullPolicy: Always
     name: kubewatch
     volumeMounts:

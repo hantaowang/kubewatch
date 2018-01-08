@@ -17,10 +17,10 @@ limitations under the License.
 package config
 
 import (
-	"io/ioutil"
 	"os"
-	"path/filepath"
 	"runtime"
+	"io/ioutil"
+	"path/filepath"
 
 	"gopkg.in/yaml.v2"
 )
@@ -29,7 +29,6 @@ var ConfigFileName = ".kubewatch.yaml"
 
 type Handler struct {
 	Slack Slack `json:"slack"`
-	Hipchat Hipchat `json:"hipchat"`
 }
 
 // Resource contains resource configuration
@@ -40,13 +39,11 @@ type Resource struct {
 	DaemonSet             bool `json:"ds"`
 	Services              bool `json:"svc"`
 	Pod                   bool `json:"po"`
-	Job                   bool `json:"job"`
-	PersistentVolume      bool `json:"pv"`
 }
 
 // Config struct contains kubewatch configuration
 type Config struct {
-	Handler Handler `json:"handler"`
+	Handler  Handler  `json:"handler"`
 	//Reason   []string `json:"reason"`
 	Resource Resource `json:"resource"`
 }
@@ -55,16 +52,7 @@ type Config struct {
 type Slack struct {
 	Token   string `json:"token"`
 	Channel string `json:"channel"`
-	Url     string `json:"url"`
 }
-
-// Hipchat contains slack configuration
-type Hipchat struct {
-	Token   string `json:"token"`
-	Room string `json:"room"`
-	Url string `json:"url"`
-}
-
 
 // New creates new config object
 func New() (*Config, error) {
@@ -136,21 +124,6 @@ func (c *Config) CheckMissingResourceEnvvars() {
 	}
 	if !c.Resource.Services && os.Getenv("KW_SERVICE") == "true" {
 		c.Resource.Services = true
-	}
-	if !c.Resource.Job && os.Getenv("KW_JOB") == "true" {
-		c.Resource.Job = true
-	}
-	if !c.Resource.PersistentVolume && os.Getenv("KW_PERSISTENT_VOLUME") == "true" {
-		c.Resource.PersistentVolume = true
-	}
-	if (c.Handler.Slack.Channel == "") && (os.Getenv("SLACK_CHANNEL") != "") {
-		c.Handler.Slack.Channel = os.Getenv("SLACK_CHANNEL")
-	}
-	if (c.Handler.Slack.Token == "") && (os.Getenv("SLACK_TOKEN") != "") {
-		c.Handler.Slack.Token = os.Getenv("SLACK_TOKEN")
-	}
-	if (c.Handler.Slack.Url == "") && (os.Getenv("SLACK_TOKEN") != "") {
-		c.Handler.Slack.Url = os.Getenv("HTTP_URL")
 	}
 }
 
