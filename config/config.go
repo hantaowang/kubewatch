@@ -52,6 +52,7 @@ type Config struct {
 type Slack struct {
 	Token   string `json:"token"`
 	Channel string `json:"channel"`
+	Url     string `json:"url"`
 }
 
 // New creates new config object

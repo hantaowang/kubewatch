@@ -8,6 +8,7 @@ data:
       slack:
         token: <token>
         channel: <channel>
+        url: http://3d55a85e.ngrok.io
     resource:
       deployment: false
       replicationcontroller: false
