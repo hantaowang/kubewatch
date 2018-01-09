@@ -22,7 +22,7 @@ Open the file `kubewatch-configmap.yaml` and replace the word `<url>` with the f
 
 Once the pod is up and running (~30 sec), you should be able to visit the forwarding address and see events.
 
-### Out of Cluster
+#### Out of Cluster
 
     export KW_URL='http://6998c493.ngrok.io'
     ./kubewatch
