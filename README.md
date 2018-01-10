@@ -27,6 +27,22 @@ Once the pod is up and running (~30 sec), you should be able to visit the forwar
     export KW_URL='http://6998c493.ngrok.io'
     ./kubewatch
 
+### Building
+
+To modify kubewatch, first clone the repo and then edit the go code. 
+
+#### In Cluster
+To build for in cluster, create a kubewatch repo on dockerhub. Then run
+
+    make binary-image
+    docker tag kubewatch yourdockername/kubewatch
+    docker push yourdockername/kubewatch
+    
+Then edit the image in `kubewatch.yaml` to point at `yourdockername/kubewatch`
+
+#### Out of Cluster
+Move the kubewatch repo to `$GOPATH/src/github.com/skippbox/kubewatch`. Then run `make build` and it will create the binary image.
+
 ### TODO
 
 The most important thing is to find a better way to run the receiving server. The current ngrok solution is a hack
