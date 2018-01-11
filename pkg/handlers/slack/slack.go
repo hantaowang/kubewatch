@@ -96,7 +96,16 @@ func (s *Slack) ObjectUpdated(oldObj, newObj interface{}) {
 func notifySlack(s *Slack, obj interface{}, action string) {
 	e := kbEvent.New(obj, action)
 	msg := prepareHTTPMessage(e)
-	http.PostForm(s.Url, url.Values{"event": {msg}})
+	http.PostForm(s.Url, url.Values{
+		"event": {msg},
+		"kind": {e.Kind},
+		"namespace": {e.Namespace},
+		"reason": {e.Reason},
+		"name": {e.Name},
+		"status": {e.Status},
+		"host": {e.Host},
+		"component": {e.Component},
+	})
 }
 
 func prepareHTTPMessage(e event.Event) string {
