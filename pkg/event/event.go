@@ -62,6 +62,15 @@ func New(obj interface{}, action string) Event {
 		reason = action
 		status = m[action]
 		name = apiRC.Name
+	} else if apiNode, ok := obj.(*api.Node); ok {
+		kind = "node"
+		reason = action
+		status = m[action]
+		name = apiNode.Name
+	} else {
+		kind = "unknown"
+		reason = action
+		status = m[action]
 	}
 
 	kbEvent := Event{
