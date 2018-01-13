@@ -16,8 +16,12 @@ limitations under the License.
 
 package main
 
-import "github.com/skippbox/kubewatch/cmd"
+import (
+	"github.com/skippbox/kubewatch/cmd"
+	"fmt"
+)
 
 func main() {
+	fmt.Println("Starting...")
 	cmd.Execute()
 }

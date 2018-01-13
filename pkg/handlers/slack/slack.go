@@ -27,6 +27,8 @@ import (
 	kbEvent "github.com/skippbox/kubewatch/pkg/event"
 	"net/http"
 	"net/url"
+	"io/ioutil"
+	"time"
 )
 
 var slackColors = map[string]string{
@@ -54,6 +56,7 @@ type Slack struct {
 	Token   string
 	Channel string
 	Url 	string
+	Connected	bool
 }
 
 // Init prepares slack configuration
@@ -77,8 +80,34 @@ func (s *Slack) Init(c *config.Config) error {
 	s.Token = token
 	s.Channel = channel
 	s.Url = url
+	s.Connected = false
+
+	go s.getServer()
 
 	return nil
+}
+
+func (s *Slack) getServer() {
+	fmt.Println("Waiting for receiving server pong response...")
+
+	for {
+		time.Sleep(time.Second * 3)
+		r, err := http.Get(s.Url + "/ping")
+		if err != nil {
+			fmt.Println(err)
+			continue
+		}
+		responseData, err := ioutil.ReadAll(r.Body)
+		if err != nil {
+			fmt.Println(err)
+			continue
+		}
+		if string(responseData) == "pong" {
+			s.Connected = true
+			fmt.Println("Response received")
+			break
+		}
+	}
 }
 
 func (s *Slack) ObjectCreated(obj interface{}) {
@@ -96,6 +125,13 @@ func (s *Slack) ObjectUpdated(oldObj, newObj interface{}) {
 func notifySlack(s *Slack, obj interface{}, action string) {
 	e := kbEvent.New(obj, action)
 	msg := prepareHTTPMessage(e)
+
+	for {
+		if s.Connected {
+			break
+		}
+		time.Sleep(time.Second * 3)
+	}
 	http.PostForm(s.Url, url.Values{
 		"event": {msg},
 		"kind": {e.Kind},
