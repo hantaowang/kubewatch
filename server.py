@@ -24,6 +24,9 @@ class MyServer(BaseHTTPRequestHandler):
         self.send_response(200)
         self.send_header("Content-type", "text/html")
         self.end_headers()
+	if self.path == '/ping':
+		self.wfile.write('pong')
+		return
 	for e in events:
 		self.wfile.write(e)
 		self.wfile.write("<br>")
