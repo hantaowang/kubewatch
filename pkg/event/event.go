@@ -31,6 +31,7 @@ type Event struct {
 	Reason    string
 	Status    string
 	Name      string
+	TriggerID string
 }
 
 var m = map[string]string{
@@ -41,7 +42,7 @@ var m = map[string]string{
 
 // New create new KubewatchEvent
 func New(obj interface{}, action string) Event {
-	var namespace, kind, component, host, reason, status, name string
+	var namespace, kind, component, host, reason, status, name, triggerID string
 	if apiService, ok := obj.(*api.Service); ok {
 		namespace = apiService.ObjectMeta.Namespace
 		kind = "service"
@@ -49,6 +50,9 @@ func New(obj interface{}, action string) Event {
 		reason = action
 		status = m[action]
 		name = apiService.Name
+		if val, ok := apiService.Annotations["triggerID"]; ok {
+			triggerID = val
+		}
 	} else if apiPod, ok := obj.(*api.Pod); ok {
 		namespace = apiPod.ObjectMeta.Namespace
 		kind = "pod"
@@ -56,17 +60,26 @@ func New(obj interface{}, action string) Event {
 		host = apiPod.Spec.NodeName
 		status = m[action]
 		name = apiPod.Name
+		if val, ok := apiPod.Annotations["triggerID"]; ok {
+			triggerID = val
+		}
 	} else if apiRC, ok := obj.(*api.ReplicationController); ok {
 		name = apiRC.TypeMeta.Kind
 		kind = "replication controller"
 		reason = action
 		status = m[action]
 		name = apiRC.Name
+		if val, ok := apiRC.Annotations["triggerID"]; ok {
+			triggerID = val
+		}
 	} else if apiNode, ok := obj.(*api.Node); ok {
 		kind = "node"
 		reason = action
 		status = m[action]
 		name = apiNode.Name
+		if val, ok := apiNode.Annotations["triggerID"]; ok {
+			triggerID = val
+		}
 	} else {
 		kind = "unknown"
 		reason = action
@@ -81,6 +94,7 @@ func New(obj interface{}, action string) Event {
 		Reason:    reason,
 		Status:    status,
 		Name:      name,
+		TriggerID: triggerID,
 	}
 
 	return kbEvent

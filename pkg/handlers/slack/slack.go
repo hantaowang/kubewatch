@@ -92,6 +92,7 @@ func (s *Slack) getServer() {
 
 	for {
 		time.Sleep(time.Second * 3)
+		fmt.Print(s.Url)
 		r, err := http.Get(s.Url + "/ping")
 		if err != nil {
 			fmt.Println(err)
@@ -128,9 +129,9 @@ func notifySlack(s *Slack, obj interface{}, action string) {
 
 	for {
 		if s.Connected {
+			time.Sleep(time.Second * 3)
 			break
 		}
-		time.Sleep(time.Second * 3)
 	}
 	http.PostForm(s.Url, url.Values{
 		"event": {msg},
@@ -141,6 +142,7 @@ func notifySlack(s *Slack, obj interface{}, action string) {
 		"status": {e.Status},
 		"host": {e.Host},
 		"component": {e.Component},
+		"triggerID": {e.TriggerID},
 	})
 }
 
