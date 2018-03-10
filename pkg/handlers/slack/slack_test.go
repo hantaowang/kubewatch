@@ -21,7 +21,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/skippbox/kubewatch/config"
+	"github.com/netsys/triggers/kubewatch/config"
 )
 
 func TestSlackInit(t *testing.T) {

@@ -19,10 +19,10 @@ package client
 import (
 	"log"
 
-	"github.com/skippbox/kubewatch/config"
-	"github.com/skippbox/kubewatch/pkg/handlers"
-	"github.com/skippbox/kubewatch/pkg/handlers/slack"
-	"github.com/skippbox/kubewatch/pkg/controller"
+	"github.com/netsys/triggers/kubewatch/config"
+	"github.com/netsys/triggers/kubewatch/pkg/handlers"
+	"github.com/netsys/triggers/kubewatch/pkg/handlers/slack"
+	"github.com/netsys/triggers/kubewatch/pkg/controller"
 )
 
 // Run runs the event loop processing with given handler

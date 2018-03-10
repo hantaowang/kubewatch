@@ -17,7 +17,7 @@ limitations under the License.
 package main
 
 import (
-	"github.com/skippbox/kubewatch/cmd"
+	"github.com/netsys/triggers/kubewatch/cmd"
 	"fmt"
 )
 

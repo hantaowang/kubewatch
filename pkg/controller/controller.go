@@ -21,8 +21,8 @@ import (
 	"time"
 
 	"github.com/Sirupsen/logrus"
-	"github.com/skippbox/kubewatch/config"
-	"github.com/skippbox/kubewatch/pkg/handlers"
+	"github.com/netsys/triggers/kubewatch/config"
+	"github.com/netsys/triggers/kubewatch/pkg/handlers"
 	"k8s.io/kubernetes/pkg/api"
 	"k8s.io/kubernetes/pkg/client/cache"
 	client "k8s.io/kubernetes/pkg/client/unversioned"

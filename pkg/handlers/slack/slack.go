@@ -22,9 +22,9 @@ import (
 
 	"github.com/nlopes/slack"
 
-	"github.com/skippbox/kubewatch/config"
-	"github.com/skippbox/kubewatch/pkg/event"
-	kbEvent "github.com/skippbox/kubewatch/pkg/event"
+	"github.com/netsys/triggers/kubewatch/config"
+	"github.com/netsys/triggers/kubewatch/pkg/event"
+	kbEvent "github.com/netsys/triggers/kubewatch/pkg/event"
 	"net/http"
 	"net/url"
 	"io/ioutil"
