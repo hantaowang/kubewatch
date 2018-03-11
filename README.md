@@ -1,3 +1,7 @@
+#### This repo has been deprecated. All future development is at `Netsys/triggers`, a private repo.
+
+-----------------
+
 # Kubewatch for Research
 
 ### Installing
